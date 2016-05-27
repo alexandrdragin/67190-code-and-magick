@@ -381,34 +381,55 @@
       switch (this.state.currentStatus) {
         case Verdict.WIN:
           console.log('you have won!');
+
+          var rectWin = {
+            x: 210,
+            y: 30,
+            w: 300,
+            h: 150,
+
+            setX: function(number) {
+              this.x = number;
+            }
+          };
+
+          var textWin = {
+            t: 'Ты выйграл!',
+            x: 350,
+            y: 80,
+
+            setText: function(string) {
+              this.t = string;
+            }
+          };
+
           this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-          this.ctx.fillRect(210, 30, 300, 150);
-          this.ctx.fillStyle = 'white';
-          this.ctx.fillRect(200, 20, 300, 150);
-          this.ctx.fill();
+          this.ctx.fillRect(rectWin.x, rectWin.y, rectWin.w, rectWin.h);
+          this.ctx.fillStyle = '#FFFFFF';
+          this.ctx.fillRect(rectWin.x - 10, rectWin.y - 10, rectWin.w, rectWin.h);
 
           this.ctx.font = 'bold 30px PT Mono';
           this.ctx.textAlign = 'center';
           this.ctx.fillStyle = 'Black';
-          this.ctx.fillText('Ты выйграл!', 350, 80);
+          this.ctx.fillText(textWin.t, textWin.x, textWin.y);
 
           this.ctx.font = 'normal normal 16px PT Mono';
           this.ctx.textAlign = 'center';
-          this.ctx.fillText('Пробел если хочешь выиграть еще', 350, 120);
+          this.ctx.fillText('Пробел если хочешь выиграть', 350, 120);
+          this.ctx.fillText('еще немного', 350, 140);
           break;
 
         case Verdict.FAIL:
           console.log('you have failed!');
           this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
           this.ctx.fillRect(210, 30, 300, 150);
-          this.ctx.fillStyle = 'white';
+          this.ctx.fillStyle = '#FFFFFF';
           this.ctx.fillRect(200, 20, 300, 150);
-          this.ctx.fill();
 
           this.ctx.font = 'bold 30px PT Mono';
           this.ctx.textAlign = 'center';
           this.ctx.fillStyle = 'Black';
-          this.ctx.fillText('Слил', 350, 80);
+          this.ctx.fillText('Ха-ха! Да ты Сливака!', 350, 80);
 
           this.ctx.font = 'normal normal 16px PT Mono';
           this.ctx.textAlign = 'center';
@@ -419,9 +440,8 @@
           console.log('game is on pause!');
           this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
           this.ctx.fillRect(210, 30, 300, 150);
-          this.ctx.fillStyle = 'white';
+          this.ctx.fillStyle = '#FFFFFF';
           this.ctx.fillRect(200, 20, 300, 150);
-          this.ctx.fill();
 
           this.ctx.font = 'bold 30px PT Mono';
           this.ctx.textAlign = 'center';
@@ -438,9 +458,8 @@
           console.log('welcome to the game! Press Space to start');
           this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
           this.ctx.fillRect(210, 30, 300, 150);
-          this.ctx.fillStyle = 'white';
+          this.ctx.fillStyle = '#FFFFFF';
           this.ctx.fillRect(200, 20, 300, 150);
-          this.ctx.fill();
 
           this.ctx.font = 'bold 16px PT Mono';
           this.ctx.textBaseline = 'Top';
