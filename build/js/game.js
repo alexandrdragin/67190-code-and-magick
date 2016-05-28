@@ -388,8 +388,8 @@
         shadowColor: 'rgba(0, 0, 0, 0.7)',
         mainColor: '#FFFFFF',
 
-        setX: function(number) {
-          this.x = number;
+        setH: function(number) {
+          this.h = number;
         },
 
         drawRect: function() {
@@ -423,6 +423,8 @@
           this.ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
           this.ctx.fillStyle = rect.mainColor;
           this.ctx.fillRect(rect.x - 10, rect.y - 10, rect.w, rect.h);
+
+          //rect.drawText(text.win, text.x, text.y); //грустный смайлик из за видимости
 
           this.ctx.font = text.styleHeader;
           this.ctx.textAlign = 'center';
@@ -487,9 +489,9 @@
           this.ctx.fillRect(rect.x - 10, rect.y - 10, rect.w, rect.h);
 
           this.ctx.font = text.styleHeader;
-          this.ctx.textBaseline = 'Top';
+          this.ctx.textBaseline = 'center';
           this.ctx.fillStyle = 'Black';
-          this.ctx.fillText(text.intro, 225, 60);
+          this.ctx.fillText(text.intro, 225, 70);
 
           this.ctx.font = 'normal normal 16px PT Mono';
           this.ctx.textAlign = 'center';
@@ -498,7 +500,9 @@
           this.ctx.fillText('Пробел для старта', 350, 140);
           break;
 
-          //дописал доп задание но не занаю как ее подкючть
+          /*
+          дописал доп задание но не занаю как ее подлючить и проверить
+
           function drawTextOnCanvas(stringOfText, maxWidth) {
             var words = stringOfText.split(' ');
             var countWords = words.length;
@@ -514,17 +518,18 @@
               } else {
                 line = testLine;
               }
-            }
-            this.ctx.fillStyle = rect.shadowColor;
-            this.ctx.fillRect(rect.x, rect.y, rect.w, rect.h * numberOfLine);
-            this.ctx.fillStyle = rect.mainColor;
-            this.ctx.fillRect(rect.x - 10, rect.y - 10, rect.w, rect.h * numberOfLine);
 
-            this.ctx.fillText(line, 20, 40);
-            this.ctx.font = 'normal normal 16px PT Mono';
-            this.ctx.textAlign = 'center';
-            this.ctx.fillStyle = 'Black';
-          }
+              this.ctx.fillStyle = rect.shadowColor;
+              this.ctx.fillRect(rect.x, rect.y, rect.w, rect.h * numberOfLine);
+              this.ctx.fillStyle = rect.mainColor;
+              this.ctx.fillRect(rect.x - 10, rect.y - 10, rect.w, rect.h * numberOfLine);
+
+              this.ctx.fillText(line, 20, 40);
+              this.ctx.font = 'normal normal 16px PT Mono';
+              this.ctx.textAlign = 'center';
+              this.ctx.fillStyle = 'Black';
+            }
+          } */
       }
     },
 
