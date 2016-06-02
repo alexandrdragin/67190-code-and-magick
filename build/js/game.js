@@ -374,35 +374,26 @@
       }
     },
 
+    drawRect: function() {
+      this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+      this.ctx.fillRect(210, 30, 300, 150);
+      this.ctx.fillStyle = '#FFFFFF';
+      this.ctx.fillRect(210 - 10, 30 - 10, 300, 150);
+    },
+
+    drawText: function() {
+      this.ctx.font = 'bold 30px PT Mono';
+      this.ctx.textAlign = 'center';
+      this.ctx.fillStyle = 'Black';
+    },
+
     /**
      * Отрисовка экрана паузы.
      */
     _drawPauseScreen: function() {
 
-      var rect = {
-        x: 210,
-        y: 30,
-        w: 300,
-        h: 150,
-
-        shadowColor: 'rgba(0, 0, 0, 0.7)',
-        mainColor: '#FFFFFF',
-
-        setH: function(number) {
-          this.h = number;
-        },
-
-        drawRect: function() {
-          this.ctx.fillStyle = rect.shadowColor;
-          this.ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
-          this.ctx.fillStyle = rect.mainColor;
-          this.ctx.fillRect(rect.x - 10, rect.y - 10, rect.w, rect.h);
-        }
-      };
-
       var text = {
-        styleHeader: 'bold 30px PT Mono',
-        win: 'Ты выйграл!',
+        win: 'Ты выиграл!',
         fail: 'Да ты Сливака!',
         pause: 'Пауза',
         intro: 'Правила просты',
@@ -417,18 +408,8 @@
         case Verdict.WIN:
           console.log('you have won!');
 
-          //rect.drawRect(); //грустный смайлик из за видимости
-
-          this.ctx.fillStyle = rect.shadowColor;
-          this.ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
-          this.ctx.fillStyle = rect.mainColor;
-          this.ctx.fillRect(rect.x - 10, rect.y - 10, rect.w, rect.h);
-
-          //rect.drawText(text.win, text.x, text.y); //грустный смайлик из за видимости
-
-          this.ctx.font = text.styleHeader;
-          this.ctx.textAlign = 'center';
-          this.ctx.fillStyle = 'Black';
+          game.drawRect();
+          game.drawText();
           this.ctx.fillText(text.win, text.x, text.y);
 
           this.ctx.font = 'normal normal 16px PT Mono';
@@ -440,16 +421,8 @@
         case Verdict.FAIL:
           console.log('you have failed!');
 
-          //rect.drawRect(); //грустный смайлик из за видимости
-
-          this.ctx.fillStyle = rect.shadowColor;
-          this.ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
-          this.ctx.fillStyle = rect.mainColor;
-          this.ctx.fillRect(rect.x - 10, rect.y - 10, rect.w, rect.h);
-
-          this.ctx.font = text.styleHeader;
-          this.ctx.textAlign = 'center';
-          this.ctx.fillStyle = 'Black';
+          game.drawRect();
+          game.drawText();
           this.ctx.fillText(text.fail, 350, 80);
 
           this.ctx.font = 'normal normal 16px PT Mono';
@@ -460,16 +433,8 @@
         case Verdict.PAUSE:
           console.log('game is on pause!');
 
-          //rect.drawRect(); //грустный смайлик из за видимости
-
-          this.ctx.fillStyle = rect.shadowColor;
-          this.ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
-          this.ctx.fillStyle = rect.mainColor;
-          this.ctx.fillRect(rect.x - 10, rect.y - 10, rect.w, rect.h);
-
-          this.ctx.font = text.styleHeader;
-          this.ctx.textAlign = 'center';
-          this.ctx.fillStyle = 'Black';
+          game.drawRect();
+          game.drawText();
           this.ctx.fillText(text.pause, 350, 80);
 
           this.ctx.font = 'normal normal 16px PT Mono';
@@ -481,55 +446,45 @@
         case Verdict.INTRO:
           console.log('welcome to the game! Press Space to start');
 
-          //rect.drawRect(); //грустный смайлик из за видимости
+          game.drawRect();
 
-          this.ctx.fillStyle = rect.shadowColor;
-          this.ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
-          this.ctx.fillStyle = rect.mainColor;
-          this.ctx.fillRect(rect.x - 10, rect.y - 10, rect.w, rect.h);
-
-          this.ctx.font = text.styleHeader;
-          this.ctx.textBaseline = 'center';
-          this.ctx.fillStyle = 'Black';
-          this.ctx.fillText(text.intro, 225, 70);
+          game.drawText();
+          this.ctx.fillText(text.intro, 350, 70);
 
           this.ctx.font = 'normal normal 16px PT Mono';
           this.ctx.textAlign = 'center';
-          this.ctx.fillText('Стрелки помогают для ходьбы', 350, 100);
-          this.ctx.fillText('Шифтом можно выйграть', 350, 120);
-          this.ctx.fillText('Пробел для старта', 350, 140);
+          this.ctx.fillText('Стрелки помогают для ходьбы', 350, 110);
+          this.ctx.fillText('Шифтом можно выиграть', 350, 130);
+          this.ctx.fillText('Пробел для старта', 350, 150);
           break;
+      }
+    },
 
-          /*
-          дописал доп задание но не занаю как ее подлючить и проверить
+    drawTextOnCanvas: function(stringOfText, maxWidth) {
+      var words = stringOfText.split(' ');
+      var countWords = words.length;
+      var line = '';
+      var numberOfLine = 0;
+      for (var n = 0; n < countWords; n++) {
+        var testLine = line + words[n] + ' ';
+        var testWidth = this.ctx.measureText(testLine).width;
+        if (testWidth > maxWidth) {
+          this.ctx.fillText(line, 20, 40);
+          line = words[n] + ' ';
+          numberOfLine++;
+        } else {
+          line = testLine;
+        }
 
-          function drawTextOnCanvas(stringOfText, maxWidth) {
-            var words = stringOfText.split(' ');
-            var countWords = words.length;
-            var line = '';
-            var numberOfLine = 0;
-            for (var n = 0; n < countWords; n++) {
-              var testLine = line + words[n] + ' ';
-              var testWidth = this.ctx.measureText(testLine).width;
-              if (testWidth > maxWidth) {
-                this.ctx.fillText(line, 20, 40);
-                line = words[n] + ' ';
-                numberOfLine++;
-              } else {
-                line = testLine;
-              }
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        this.ctx.fillRect(210, 30, 300, 150 * numberOfLine);
+        this.ctx.fillStyle = '#FFFFFF';
+        this.ctx.fillRect(210 - 10, 30 - 10, 300, 150 * numberOfLine);
 
-              this.ctx.fillStyle = rect.shadowColor;
-              this.ctx.fillRect(rect.x, rect.y, rect.w, rect.h * numberOfLine);
-              this.ctx.fillStyle = rect.mainColor;
-              this.ctx.fillRect(rect.x - 10, rect.y - 10, rect.w, rect.h * numberOfLine);
-
-              this.ctx.fillText(line, 20, 40);
-              this.ctx.font = 'normal normal 16px PT Mono';
-              this.ctx.textAlign = 'center';
-              this.ctx.fillStyle = 'Black';
-            }
-          } */
+        this.ctx.fillText(line, 20, 40);
+        this.ctx.font = 'normal normal 16px PT Mono';
+        this.ctx.textAlign = 'center';
+        this.ctx.fillStyle = 'Black';
       }
     },
 
