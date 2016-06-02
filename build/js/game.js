@@ -374,23 +374,117 @@
       }
     },
 
+    drawRect: function() {
+      this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+      this.ctx.fillRect(210, 30, 300, 150);
+      this.ctx.fillStyle = '#FFFFFF';
+      this.ctx.fillRect(210 - 10, 30 - 10, 300, 150);
+    },
+
+    drawText: function() {
+      this.ctx.font = 'bold 30px PT Mono';
+      this.ctx.textAlign = 'center';
+      this.ctx.fillStyle = 'Black';
+    },
+
     /**
      * Отрисовка экрана паузы.
      */
     _drawPauseScreen: function() {
+
+      var text = {
+        win: 'Ты выиграл!',
+        fail: 'Да ты Сливака!',
+        pause: 'Пауза',
+        intro: 'Правила просты',
+        x: 350,
+        y: 80,
+
+        setText: function(string) {
+          this.t = string;
+        }
+      };
       switch (this.state.currentStatus) {
         case Verdict.WIN:
           console.log('you have won!');
+
+          game.drawRect();
+          game.drawText();
+          this.ctx.fillText(text.win, text.x, text.y);
+
+          this.ctx.font = 'normal normal 16px PT Mono';
+          this.ctx.textAlign = 'center';
+          this.ctx.fillText('Пробел если хочешь выиграть', 350, 120);
+          this.ctx.fillText('еще немного', 350, 140);
           break;
+
         case Verdict.FAIL:
           console.log('you have failed!');
+
+          game.drawRect();
+          game.drawText();
+          this.ctx.fillText(text.fail, 350, 80);
+
+          this.ctx.font = 'normal normal 16px PT Mono';
+          this.ctx.textAlign = 'center';
+          this.ctx.fillText('стыдоба, перезагружай страницу', 350, 120);
           break;
+
         case Verdict.PAUSE:
           console.log('game is on pause!');
+
+          game.drawRect();
+          game.drawText();
+          this.ctx.fillText(text.pause, 350, 80);
+
+          this.ctx.font = 'normal normal 16px PT Mono';
+          this.ctx.textAlign = 'center';
+          this.ctx.fillText('потому что вы отскролили вниз', 350, 110);
+          this.ctx.fillText('Пробел чтобы продолжить', 350, 140);
           break;
+
         case Verdict.INTRO:
           console.log('welcome to the game! Press Space to start');
+
+          game.drawRect();
+
+          game.drawText();
+          this.ctx.fillText(text.intro, 350, 70);
+
+          this.ctx.font = 'normal normal 16px PT Mono';
+          this.ctx.textAlign = 'center';
+          this.ctx.fillText('Стрелки помогают для ходьбы', 350, 110);
+          this.ctx.fillText('Шифтом можно выиграть', 350, 130);
+          this.ctx.fillText('Пробел для старта', 350, 150);
           break;
+      }
+    },
+
+    drawTextOnCanvas: function(stringOfText, maxWidth) {
+      var words = stringOfText.split(' ');
+      var countWords = words.length;
+      var line = '';
+      var numberOfLine = 0;
+      for (var n = 0; n < countWords; n++) {
+        var testLine = line + words[n] + ' ';
+        var testWidth = this.ctx.measureText(testLine).width;
+        if (testWidth > maxWidth) {
+          this.ctx.fillText(line, 20, 40);
+          line = words[n] + ' ';
+          numberOfLine++;
+        } else {
+          line = testLine;
+        }
+
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        this.ctx.fillRect(210, 30, 300, 150 * numberOfLine);
+        this.ctx.fillStyle = '#FFFFFF';
+        this.ctx.fillRect(210 - 10, 30 - 10, 300, 150 * numberOfLine);
+
+        this.ctx.fillText(line, 20, 40);
+        this.ctx.font = 'normal normal 16px PT Mono';
+        this.ctx.textAlign = 'center';
+        this.ctx.fillStyle = 'Black';
       }
     },
 

@@ -5,7 +5,7 @@
   function getMessage(a, b){
 
         if (typeof a === "boolean") {
-          if (a == true) {
+          if (a) {
             return "Я попал в " + b + ".";
           }
           else {
