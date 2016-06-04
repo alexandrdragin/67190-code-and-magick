@@ -57,7 +57,20 @@
     if(reviewName.value.length && (reviewScoreValue > 2 || reviewText.value.length)) {
       submitButton.disabled = false;
     }
+
+    if(!reviewName.validity.valid) {
+      reviewName.placeholder = reviewName.validationMessage;
+    }
+
+    if(!reviewText.validity.valid) {
+      reviewText.placeholder = reviewText.validationMessage;
+    } else {
+      reviewText.placeholder = 'при оценке выше 3х отзыв не обязателен';
+    }
   }
+
+  //git commit -a -m "module3-task2 "
+
 
   reviewName.onkeyup = function() {
     checkValues();
