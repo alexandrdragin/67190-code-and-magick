@@ -96,33 +96,28 @@ var cookies = require('browser-cookies');
   }
 
   reviewForm.onsubmit = function() {
-    checkValues();
-
     var now = new Date();
 
     var nowYear = now.getFullYear();
     var MY_BD_THISYEAR = new Date(nowYear, 7, 14, 0, 0, 0);
     var expiresDate = null;
 
-    // если прошел
     if (now > MY_BD_THISYEAR) {
       expiresDate = (+now - MY_BD_THISYEAR);
     } else {
-    // если еще небыло то запивваем количесво дней с начала года + с 14.08 до конца прошлого
       var NUMBER_OF_DAYS_SINCE_THIS_YEAR = +now - (new Date(nowYear, 0, 1, 0, 0, 0));
-      // 156
       var NUMBER_OF_DAYS_LAST_YEAR = (new Date(nowYear - 1, 11, 31, 0, 0, 0)) - (new Date(nowYear - 1, 7, 14, 0, 0, 0));
-      // ~139 дней
+
       expiresDate = NUMBER_OF_DAYS_SINCE_THIS_YEAR + NUMBER_OF_DAYS_LAST_YEAR;
     }
 
     reviewScore = reviewForm.querySelector('input[name="review-mark"]:checked');
     var expiresDateDAYS = expiresDate / 24 / 60 / 60 / 1000;
 
-    cookies.set('radioValue', reviewScore.value, 'expires', {expires: expiresDateDAYS});
-    cookies.set('reviewName', reviewName.value, 'expires', {expires: expiresDateDAYS});
-
-    reviewForm.submit();
+    cookies.set('radioValue', reviewScore.value, {expires: expiresDateDAYS});
+    cookies.set('reviewName', reviewName.value, new Date(expiresDateDAYS).toUTCString());
   };
+
+  checkValues();
 
 })();
