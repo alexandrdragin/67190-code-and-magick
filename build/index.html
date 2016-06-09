@@ -122,8 +122,8 @@
 
 <script>
   var reviews = [];
-  var __jsonpCallback = function(data){
-    loadedData = data;
+  var __reviewsLoadCallback = function(data){
+    reviews = data;
   };
 </script>
 <script src="https://up.htmlacademy.ru/assets/js_intensive/jsonp/reviews.js"></script>
