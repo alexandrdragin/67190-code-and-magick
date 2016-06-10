@@ -114,7 +114,7 @@ var cookies = require('browser-cookies');
     reviewScore = reviewForm.querySelector('input[name="review-mark"]:checked');
     var expiresDateDAYS = expiresDate / 24 / 60 / 60 / 1000;
 
-    cookies.set('radioValue', reviewScore.value, {expires: expiresDateDAYS});
+    cookies.set('radioValue', reviewScore.value, expiresDateDAYS);
     cookies.set('reviewName', reviewName.value, new Date(expiresDateDAYS).toUTCString());
   };
 
