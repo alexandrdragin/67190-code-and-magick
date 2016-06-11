@@ -2,17 +2,19 @@
 
 (function() {
 
-  var getJSON = function(path, nameFunction) {
-    var scriptTagBody = document.createElement('script');
-    scriptTagBody.textContent = 'var reviews = []; var ' + nameFunction + ' = function(data){reviews = data;};';
-    document.body.appendChild(scriptTagBody);
+  var getJSONMetod = function(callback){
+    var getJSON = function(path, nameFunction) {
+      var scriptTagBody = document.createElement('script');
+      scriptTagBody.textContent = 'var reviews = []; var ' + nameFunction + ' = function(data){reviews = data; callback(reviews);};';
+      document.body.appendChild(scriptTagBody);
 
-    var scriptTagLink = document.createElement('script');
-    scriptTagLink.src = path;
-    document.body.appendChild(scriptTagLink);
+      var scriptTagLink = document.createElement('script');
+      scriptTagLink.src = path;
+      document.body.appendChild(scriptTagLink);
+    };
+
+    getJSON('https://up.htmlacademy.ru/assets/js_intensive/jsonp/reviews.js', '__reviewsLoadCallback');
   };
-
-  getJSON('https://up.htmlacademy.ru/assets/js_intensive/jsonp/reviews.js', '__reviewsLoadCallback');
 
   var ratingClass = {
     '1': 'review-rating-one',
@@ -64,9 +66,17 @@
     return copyCat;
   };
 
-  window.reviews.forEach(function(data) {
-    createReviewElement(data, reviewList);
-  });
+  var renderReviews = function(reviews) {
+    reviews.forEach(function(data) {
+      createReviewElement(data, reviewList);
+    });
+  };
+
+  var loadedRewiewsCallback = function(reviewLists) {
+    renderReviews(reviewLists);
+  };
+
+  getJSONMetod(loadedRewiewsCallback);
 
   reviewFilter.classList.remove('invisible');
 
