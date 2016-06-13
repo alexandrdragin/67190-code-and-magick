@@ -20,8 +20,6 @@
   var reviewList = document.querySelector('.reviews-list');
   var contentReview = null;
 
-  var requestFailureTimeout = 10000;
-
   if ('content' in reviewTemplate) {
     contentReview = reviewTemplate.content.querySelector('.review');
   } else {
@@ -54,7 +52,7 @@
     return copyCat;
   };
 
-  reviews.forEach(function(data) {
+  window.reviews.forEach(function(data) {
     createReviewElement(data, reviewList);
   });
 
