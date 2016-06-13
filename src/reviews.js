@@ -26,6 +26,19 @@
     contentReview = reviewTemplate.querySelector('.review');
   }
 
+  var getAllRewiews = function(callback) {
+    var xhr = new XMLHttpRequest();
+
+    xhr.onload = function(e) {
+      var loadedData = JSON.parse(e.target.response);
+      callback(loadedData);
+      document.querySelector('.reviews').classList.add('reviews-list-loading');
+    };
+
+    xhr.open('get', 'https://o0.github.io/assets/json/reviews.json');
+    xhr.send();
+  };
+
   var createReviewElement = function(data, container) {
     var copyCat = contentReview.cloneNode(true);
     copyCat.querySelector('.review-author').title = data.author['name'];
@@ -52,18 +65,16 @@
     return copyCat;
   };
 
-  window.reviews.forEach(function(data) {
-    createReviewElement(data, reviewList);
-  });
+  var renderReviews = function(reviews) {
+    reviews.forEach(function(data) {
+      createReviewElement(data, reviewList);
+    });
+  };
 
-/*  "author": {
-        "name": "Иванов Иван",
-        "picture": "img/user-1.jpg"
-      },
-      "date": "2016-01-12",
-      "review_usefulness": 10,
-      "rating": 2,
-      "description": */
+  getAllRewiews(function(loadedRewiews) {
+    var reviews = loadedRewiews;
+    renderReviews(reviews);
+  });
 
   reviewFilter.classList.remove('invisible');
 
