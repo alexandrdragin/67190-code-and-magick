@@ -2,23 +2,6 @@
 
 (function() {
 
-  /* доп задание функция получения
-  */
-
-  var getJSON = function(path, nameFunction) {
-
-    var scriptTagBody = document.createElement('script');
-    scriptTagBody.textContent = 'var reviews = []; var ' + nameFunction + ' = function(data){reviews = data;};';
-    var reviewTemplate = document.querySelector('#review-template');
-    reviewTemplate.insertAdjacentHTML('afterEnd', scriptTagBody);
-
-    var scriptTagLink = document.createElement('script');
-    scriptTagLink.src = path;
-    scriptTagBody.appendChild(scriptTagLink);
-  };
-
-  getJSON('https://up.htmlacademy.ru/assets/js_intensive/jsonp/reviews.js', '__reviewsLoadCallback');
-
   var ratingClass = {
     '1': 'review-rating-one',
     '2': 'review-rating-two',
@@ -36,6 +19,8 @@
   var reviewTemplate = document.querySelector('#review-template');
   var reviewList = document.querySelector('.reviews-list');
   var contentReview = null;
+
+  var requestFailureTimeout = 10000;
 
   if ('content' in reviewTemplate) {
     contentReview = reviewTemplate.content.querySelector('.review');
@@ -69,9 +54,18 @@
     return copyCat;
   };
 
-  window.reviews.forEach(function(data) {
+  reviews.forEach(function(data) {
     createReviewElement(data, reviewList);
   });
+
+/*  "author": {
+        "name": "Иванов Иван",
+        "picture": "img/user-1.jpg"
+      },
+      "date": "2016-01-12",
+      "review_usefulness": 10,
+      "rating": 2,
+      "description": */
 
   reviewFilter.classList.remove('invisible');
 
