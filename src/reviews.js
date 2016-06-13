@@ -2,14 +2,19 @@
 
 (function() {
 
+  /* доп задание функция получения
+  */
+
   var getJSON = function(path, nameFunction) {
+
     var scriptTagBody = document.createElement('script');
     scriptTagBody.textContent = 'var reviews = []; var ' + nameFunction + ' = function(data){reviews = data;};';
-    document.body.appendChild(scriptTagBody);
+    var reviewTemplate = document.querySelector('#review-template');
+    reviewTemplate.insertAdjacentHTML('afterEnd', scriptTagBody);
 
     var scriptTagLink = document.createElement('script');
     scriptTagLink.src = path;
-    document.body.appendChild(scriptTagLink);
+    scriptTagBody.appendChild(scriptTagLink);
   };
 
   getJSON('https://up.htmlacademy.ru/assets/js_intensive/jsonp/reviews.js', '__reviewsLoadCallback');
