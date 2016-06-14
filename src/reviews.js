@@ -2,6 +2,8 @@
 
 (function() {
 
+  var reviews = [];
+
   var ratingClass = {
     '1': 'review-rating-one',
     '2': 'review-rating-two',
@@ -65,16 +67,120 @@
     return copyCat;
   };
 
-  var renderReviews = function(reviews) {
-    reviews.forEach(function(data) {
+  var renderReviews = function(reviewsToGo) {
+    reviewList.innerHTML = '';
+
+    reviewsToGo.forEach(function(data) {
       createReviewElement(data, reviewList);
     });
   };
 
   getAllRewiews(function(loadedRewiews) {
-    var reviews = loadedRewiews;
+    reviews = loadedRewiews;
+    startFilters();
     renderReviews(reviews);
   });
+
+
+
+  var startFilters = function() {
+    var filterElements = document.querySelector('.reviews-filter');
+    for(var i = 0; i < filterElements.length; i++) {
+      filterElements[i].onclick = function(evt) {
+        if (evt.target.name === 'reviews') {
+          setActiveFilter(this.id);
+        }
+      };
+    }
+  };
+
+  var setActiveFilter = function(filterID) {
+    var filtredReviews = getFiltredReviews(filterID);
+    renderReviews(filtredReviews);
+  };
+
+  var getFiltredReviews = function(filterID) {
+    var list = reviews.slice(0);
+
+    switch (filterID) {
+      case 'reviews-recent':
+        list.sort(function(a, b) {
+          var firstDate = (new Date(a.view)).valueOf();
+          var secondDate = (new Date(b.view)).valueOf();
+          if (firstDate > secondDate) {
+            return -1;
+          }
+
+          if (firstDate < secondDate || (secondDate && firstDate === 'undefined')) {
+            return 1;
+          }
+
+          if (firstDate === firstDate) {
+            return 0;
+          }
+        });
+
+        break;
+
+      case 'reviews-good':
+        list = list.filter(function(a) {
+          return a.rating > 3;
+        });
+        list.sort(function(a, b) {
+          if (a.rating > b.rating) {
+            return -1;
+          }
+
+          if (a.rating < b.rating || (b.rating && a.rating === 'undefined')) {
+            return 1;
+          }
+
+          if (a.rating === b.rating) {
+            return 0;
+          }
+        });
+
+        break;
+
+      case 'reviews-bad':
+        list = list.filter(function(a) {
+          return a.rating < 3;
+        });
+        list.sort(function(a, b) {
+          if (a.rating > b.rating) {
+            return 1;
+          }
+
+          if (a.rating < b.rating || (b.rating && a.rating === 'undefined')) {
+            return -1;
+          }
+
+          if (a.rating === b.rating) {
+            return 0;
+          }
+        });
+
+        break;
+
+      case 'reviews-popular':
+        list.sort(function(a, b) {
+          if (a['review-rating'] > b['review-rating'] || (b['review-rating'] && a['review-rating'] === 'undefined')) {
+            return -1;
+          }
+
+          if (a['review-rating'] < b['review-rating']) {
+            return 1;
+          }
+
+          if (a['review-rating'] === b['review-rating']) {
+            return 0;
+          }
+        });
+
+        break;
+    }
+    return list;
+  };
 
   reviewFilter.classList.remove('invisible');
 
