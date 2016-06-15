@@ -123,11 +123,9 @@
         var dateFour = new Date();
         dateFour.setDate(dateFour.getDate() - 4);
 
-        list.filter(function(a) {
+        list = list.filter(function(a) {
           return new Date(a.date).valueOf() > dateFour.valueOf();
-        });
-
-        list.sort(function(a, b) {
+        }).sort(function(a, b) {
           return a.date - b.date;
         });
         break;
@@ -135,8 +133,7 @@
       case 'reviews-good':
         list = list.filter(function(a) {
           return a.rating > 2;
-        });
-        list.sort(function(a, b) {
+        }).sort(function(a, b) {
           return b.rating - a.rating;
         });
         break;
