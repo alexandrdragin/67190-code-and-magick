@@ -117,20 +117,19 @@
     var list = reviews.slice(0);
 
     switch (filterID) {
-      case 'filter-all':
+      case 'reviews-all':
         break;
       case 'reviews-recent':
         var dateFour = new Date();
         dateFour.setDate(dateFour.getDate() - 4);
 
         list.filter(function(a) {
-          return dateFour.valueOf() < new Date(a.date).valueOf();
-        }).sort(function(a, b) {
-          var firstDate = (new Date(a.date)).valueOf();
-          var secondDate = (new Date(b.date)).valueOf();
-          return firstDate - secondDate;
+          return new Date(a.date).valueOf() > dateFour.valueOf();
         });
 
+        list.sort(function(a, b) {
+          return a.date - b.date;
+        });
         break;
 
       case 'reviews-good':
@@ -140,7 +139,6 @@
         list.sort(function(a, b) {
           return b.rating - a.rating;
         });
-
         break;
 
       case 'reviews-bad':
@@ -149,14 +147,12 @@
         }).sort(function(a, b) {
           return a.rating - b.rating;
         });
-
         break;
 
       case 'reviews-popular':
         list.sort(function(a, b) {
           return a.review_usefulness - b.review_usefulness;
         });
-
         break;
     }
 
