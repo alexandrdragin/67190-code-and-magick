@@ -4,6 +4,9 @@
 
   var reviews = [];
 
+  var pageSize = 3;
+  var pageNumber = 0;
+
   var ratingClass = {
     '1': 'review-rating-one',
     '2': 'review-rating-two',
@@ -31,13 +34,19 @@
   var getAllRewiews = function(callback) {
     var xhr = new XMLHttpRequest();
 
-    xhr.onload = function(e) {
-      var loadedData = JSON.parse(e.target.response);
-      callback(loadedData);
+    xhr.open('get', 'https://o0.github.io/assets/json/reviews.json');
+
+    xhr.onloadstart = function() {
       document.querySelector('.reviews').classList.add('reviews-list-loading');
     };
 
-    xhr.open('get', 'https://o0.github.io/assets/json/reviews.json');
+    xhr.onload = function(e) {
+      var loadedData = JSON.parse(e.target.response);
+      callback(loadedData);
+      document.querySelector('.reviews').classList.remove('reviews-list-loading');
+      document.querySelector('.reviews').classList.remove('reviews-load-failure');
+    };
+
     xhr.send();
   };
 
@@ -67,10 +76,17 @@
     return copyCat;
   };
 
-  var renderReviews = function(reviewsToGo) {
-    reviewList.innerHTML = '';
+  var renderReviews = function(reviewsToGo, page) {
+    if (reviewsToGo.length === 0) {
+      reviewList.textContent = 'соррян, сегодня пустовато';
+    } else {
+      reviewList.innerHTML = '';
+    }
 
-    reviewsToGo.forEach(function(data) {
+    var from = page * pageSize;
+    var to = from + pageSize;
+
+    reviewsToGo.slice(from, to).forEach(function(data) {
       createReviewElement(data, reviewList);
     });
   };
@@ -78,10 +94,8 @@
   getAllRewiews(function(loadedRewiews) {
     reviews = loadedRewiews;
     startFilters();
-    renderReviews(reviews);
+    renderReviews(reviews, 0);
   });
-
-
 
   var startFilters = function() {
     var filterElements = document.querySelector('.reviews-filter');
@@ -96,48 +110,35 @@
 
   var setActiveFilter = function(filterID) {
     var filtredReviews = getFiltredReviews(filterID);
-    renderReviews(filtredReviews);
+    renderReviews(filtredReviews, 0);
   };
 
   var getFiltredReviews = function(filterID) {
     var list = reviews.slice(0);
 
     switch (filterID) {
+      case 'filter-all':
+        break;
       case 'reviews-recent':
-        list.sort(function(a, b) {
-          var firstDate = (new Date(a.view)).valueOf();
-          var secondDate = (new Date(b.view)).valueOf();
-          if (firstDate > secondDate) {
-            return -1;
-          }
+        var dateFour = new Date();
+        dateFour.setDate(dateFour.getDate() - 4);
 
-          if (firstDate < secondDate || (secondDate && firstDate === 'undefined')) {
-            return 1;
-          }
-
-          if (firstDate === firstDate) {
-            return 0;
-          }
+        list.filter(function(a) {
+          return dateFour.valueOf() < new Date(a.date).valueOf();
+        }).sort(function(a, b) {
+          var firstDate = (new Date(a.date)).valueOf();
+          var secondDate = (new Date(b.date)).valueOf();
+          return firstDate - secondDate;
         });
 
         break;
 
       case 'reviews-good':
         list = list.filter(function(a) {
-          return a.rating > 3;
+          return a.rating > 2;
         });
         list.sort(function(a, b) {
-          if (a.rating > b.rating) {
-            return -1;
-          }
-
-          if (a.rating < b.rating || (b.rating && a.rating === 'undefined')) {
-            return 1;
-          }
-
-          if (a.rating === b.rating) {
-            return 0;
-          }
+          return b.rating - a.rating;
         });
 
         break;
@@ -145,40 +146,20 @@
       case 'reviews-bad':
         list = list.filter(function(a) {
           return a.rating < 3;
-        });
-        list.sort(function(a, b) {
-          if (a.rating > b.rating) {
-            return 1;
-          }
-
-          if (a.rating < b.rating || (b.rating && a.rating === 'undefined')) {
-            return -1;
-          }
-
-          if (a.rating === b.rating) {
-            return 0;
-          }
+        }).sort(function(a, b) {
+          return a.rating - b.rating;
         });
 
         break;
 
       case 'reviews-popular':
         list.sort(function(a, b) {
-          if (a['review-rating'] > b['review-rating'] || (b['review-rating'] && a['review-rating'] === 'undefined')) {
-            return -1;
-          }
-
-          if (a['review-rating'] < b['review-rating']) {
-            return 1;
-          }
-
-          if (a['review-rating'] === b['review-rating']) {
-            return 0;
-          }
+          return a.review_usefulness - b.review_usefulness;
         });
 
         break;
     }
+
     return list;
   };
 
