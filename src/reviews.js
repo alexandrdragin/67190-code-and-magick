@@ -95,6 +95,8 @@
     reviews = loadedRewiews;
     startFilters();
     renderReviews(reviews, 0);
+
+    countAll();
   });
 
   var startFilters = function() {
@@ -110,6 +112,7 @@
 
   var setActiveFilter = function(filterID) {
     var filtredReviews = getFiltredReviews(filterID);
+
     renderReviews(filtredReviews, pageNumber);
   };
 
@@ -153,7 +156,25 @@
         break;
     }
 
+    if (list.length === 0) {
+      reviewFilter.querySelector('[value=' + filterID + ']').disabled = true;
+    }
+
     return list;
+  };
+
+  var countAll = function() {
+    addSupInFilters(getFiltredReviews('reviews-all').length, 'reviews-all');
+    addSupInFilters(getFiltredReviews('reviews-recent').length, 'reviews-recent');
+    addSupInFilters(getFiltredReviews('reviews-good').length, 'reviews-good');
+    addSupInFilters(getFiltredReviews('reviews-bad').length, 'reviews-bad');
+    addSupInFilters(getFiltredReviews('reviews-popular').length, 'reviews-popular');
+  };
+
+  var addSupInFilters = function(number, filterID) {
+    var supTag = document.createElement('sub');
+    supTag.textContent = ' ' + number;
+    reviewFilter.querySelector('[for=' + filterID + ']').appendChild(supTag);
   };
 
   reviewFilter.classList.remove('invisible');
