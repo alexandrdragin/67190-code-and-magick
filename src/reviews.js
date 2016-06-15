@@ -110,7 +110,7 @@
 
   var setActiveFilter = function(filterID) {
     var filtredReviews = getFiltredReviews(filterID);
-    renderReviews(filtredReviews, 0);
+    renderReviews(filtredReviews, pageNumber);
   };
 
   var getFiltredReviews = function(filterID) {
