@@ -3,9 +3,11 @@
 (function() {
 
   var reviews = [];
+  var filtredReviews = null;
 
   var pageSize = 3;
   var pageNumber = 0;
+
 
   var ratingClass = {
     '1': 'review-rating-one',
@@ -76,11 +78,15 @@
     return copyCat;
   };
 
-  var renderReviews = function(reviewsToGo, page) {
+  var renderReviews = function(reviewsToGo, page, replace) {
+    replace = typeof replace !== 'undefined' ? replace : true;
+
+    if (replace) {
+      reviewList.innerHTML = '';
+    }
+
     if (reviewsToGo.length === 0) {
       reviewList.textContent = 'соррян, сегодня пустовато';
-    } else {
-      reviewList.innerHTML = '';
     }
 
     var from = page * pageSize;
@@ -94,7 +100,7 @@
   getAllRewiews(function(loadedRewiews) {
     reviews = loadedRewiews;
     startFilters();
-    renderReviews(reviews, 0);
+    setActiveFilter('reviews-all');
 
     countAll();
   });
@@ -111,9 +117,17 @@
   };
 
   var setActiveFilter = function(filterID) {
-    var filtredReviews = getFiltredReviews(filterID);
+    filtredReviews = getFiltredReviews(filterID);
+
+    pageNumber = 0;
 
     renderReviews(filtredReviews, pageNumber);
+
+    if (filtredReviews.length > 3) {
+      reviewMoreButton.classList.remove('invisible');
+    } else {
+      reviewMoreButton.classList.add('invisible');
+    }
   };
 
   var getFiltredReviews = function(filterID) {
@@ -176,6 +190,25 @@
     supTag.textContent = ' ' + number;
     reviewFilter.querySelector('[for=' + filterID + ']').appendChild(supTag);
   };
+
+
+  function isNextPageAvailable() {
+    var canShow = pageNumber < Math.ceil(filtredReviews.length / pageSize);
+    return canShow;
+  }
+
+  /**
+   * подгрузка страниц по кнопке иф isNextPageAvailable, то
+   * добовляем по фильтру
+   * +1 страница
+   * не реплейс
+   * @return {boolean}
+   */
+  reviewMoreButton.addEventListener('click', function() {
+    if (isNextPageAvailable()) {
+      renderReviews(filtredReviews, (++pageNumber), false);
+    }
+  });
 
   reviewFilter.classList.remove('invisible');
 
