@@ -2,6 +2,11 @@
 
 (function() {
 
+  var reviews = [];
+
+  var pageSize = 3;
+  var pageNumber = 0;
+
   var ratingClass = {
     '1': 'review-rating-one',
     '2': 'review-rating-two',
@@ -25,6 +30,25 @@
   } else {
     contentReview = reviewTemplate.querySelector('.review');
   }
+
+  var getAllRewiews = function(callback) {
+    var xhr = new XMLHttpRequest();
+
+    xhr.open('get', 'https://o0.github.io/assets/json/reviews.json');
+
+    xhr.onloadstart = function() {
+      document.querySelector('.reviews').classList.add('reviews-list-loading');
+    };
+
+    xhr.onload = function(e) {
+      var loadedData = JSON.parse(e.target.response);
+      callback(loadedData);
+      document.querySelector('.reviews').classList.remove('reviews-list-loading');
+      document.querySelector('.reviews').classList.remove('reviews-load-failure');
+    };
+
+    xhr.send();
+  };
 
   var createReviewElement = function(data, container) {
     var copyCat = contentReview.cloneNode(true);
@@ -52,18 +76,106 @@
     return copyCat;
   };
 
-  window.reviews.forEach(function(data) {
-    createReviewElement(data, reviewList);
+  var renderReviews = function(reviewsToGo, page) {
+    if (reviewsToGo.length === 0) {
+      reviewList.textContent = 'соррян, сегодня пустовато';
+    } else {
+      reviewList.innerHTML = '';
+    }
+
+    var from = page * pageSize;
+    var to = from + pageSize;
+
+    reviewsToGo.slice(from, to).forEach(function(data) {
+      createReviewElement(data, reviewList);
+    });
+  };
+
+  getAllRewiews(function(loadedRewiews) {
+    reviews = loadedRewiews;
+    startFilters();
+    renderReviews(reviews, 0);
+
+    countAll();
   });
 
-/*  "author": {
-        "name": "Иванов Иван",
-        "picture": "img/user-1.jpg"
-      },
-      "date": "2016-01-12",
-      "review_usefulness": 10,
-      "rating": 2,
-      "description": */
+  var startFilters = function() {
+    var filterElements = document.querySelector('.reviews-filter');
+    for(var i = 0; i < filterElements.length; i++) {
+      filterElements[i].onclick = function(evt) {
+        if (evt.target.name === 'reviews') {
+          setActiveFilter(this.id);
+        }
+      };
+    }
+  };
+
+  var setActiveFilter = function(filterID) {
+    var filtredReviews = getFiltredReviews(filterID);
+
+    renderReviews(filtredReviews, pageNumber);
+  };
+
+  var getFiltredReviews = function(filterID) {
+    var list = reviews.slice(0);
+
+    switch (filterID) {
+      case 'reviews-all':
+        break;
+      case 'reviews-recent':
+        var dateFour = new Date();
+        dateFour.setDate(dateFour.getDate() - 4);
+
+        list = list.filter(function(a) {
+          return new Date(a.date).valueOf() > dateFour.valueOf();
+        }).sort(function(a, b) {
+          return a.date - b.date;
+        });
+        break;
+
+      case 'reviews-good':
+        list = list.filter(function(a) {
+          return a.rating > 2;
+        }).sort(function(a, b) {
+          return b.rating - a.rating;
+        });
+        break;
+
+      case 'reviews-bad':
+        list = list.filter(function(a) {
+          return a.rating < 3;
+        }).sort(function(a, b) {
+          return a.rating - b.rating;
+        });
+        break;
+
+      case 'reviews-popular':
+        list.sort(function(a, b) {
+          return a.review_usefulness - b.review_usefulness;
+        });
+        break;
+    }
+
+    if (list.length === 0) {
+      reviewFilter.querySelector('[value=' + filterID + ']').disabled = true;
+    }
+
+    return list;
+  };
+
+  var countAll = function() {
+    addSupInFilters(getFiltredReviews('reviews-all').length, 'reviews-all');
+    addSupInFilters(getFiltredReviews('reviews-recent').length, 'reviews-recent');
+    addSupInFilters(getFiltredReviews('reviews-good').length, 'reviews-good');
+    addSupInFilters(getFiltredReviews('reviews-bad').length, 'reviews-bad');
+    addSupInFilters(getFiltredReviews('reviews-popular').length, 'reviews-popular');
+  };
+
+  var addSupInFilters = function(number, filterID) {
+    var supTag = document.createElement('sub');
+    supTag.textContent = ' ' + number;
+    reviewFilter.querySelector('[for=' + filterID + ']').appendChild(supTag);
+  };
 
   reviewFilter.classList.remove('invisible');
 
