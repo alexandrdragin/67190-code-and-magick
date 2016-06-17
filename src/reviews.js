@@ -3,10 +3,18 @@
 (function() {
 
   var reviews = [];
-  var filtredReviews = null;
+  var filteredReviews = null;
 
   var pageSize = 3;
   var pageNumber = 0;
+
+  var FILTER = {
+    'ALL': 'reviews-all',
+    'RECENT': 'reviews-recent',
+    'GOOD': 'reviews-good',
+    'BAD': 'reviews-bad',
+    'POPULAR': 'reviews-popular'
+  };
 
 
   var ratingClass = {
@@ -86,7 +94,8 @@
     }
 
     if (reviewsToGo.length === 0) {
-      reviewList.textContent = 'соррян, сегодня пустовато';
+      emptyReview();
+      return;
     }
 
     var from = page * pageSize;
@@ -95,18 +104,26 @@
     reviewsToGo.slice(from, to).forEach(function(data) {
       createReviewElement(data, reviewList);
     });
+
+    checkMoreButton(reviewsToGo.length);
   };
 
   getAllRewiews(function(loadedRewiews) {
     reviews = loadedRewiews;
     startFilters();
-    setActiveFilter('reviews-all');
+    setActiveFilter(FILTER.ALL);
 
     countAll();
   });
 
   var startFilters = function() {
     var filterElements = document.querySelector('.reviews-filter');
+    filterElements.addEventListener('click', function(evt) {
+      if (evt.target.name === 'reviews') {
+        setActiveFilter(evt.target.id);
+      }
+    });
+
     for(var i = 0; i < filterElements.length; i++) {
       filterElements[i].onclick = function(evt) {
         if (evt.target.name === 'reviews') {
@@ -117,26 +134,20 @@
   };
 
   var setActiveFilter = function(filterID) {
-    filtredReviews = getFiltredReviews(filterID);
+    filteredReviews = getfilteredReviews(filterID);
 
     pageNumber = 0;
 
-    renderReviews(filtredReviews, pageNumber);
-
-    if (filtredReviews.length > 3) {
-      reviewMoreButton.classList.remove('invisible');
-    } else {
-      reviewMoreButton.classList.add('invisible');
-    }
+    renderReviews(filteredReviews, pageNumber);
   };
 
-  var getFiltredReviews = function(filterID) {
+  var getfilteredReviews = function(filterID) {
     var list = reviews.slice(0);
 
     switch (filterID) {
-      case 'reviews-all':
+      case FILTER.ALL:
         break;
-      case 'reviews-recent':
+      case FILTER.RECENT:
         var dateFour = new Date();
         dateFour.setDate(dateFour.getDate() - 4);
 
@@ -147,7 +158,7 @@
         });
         break;
 
-      case 'reviews-good':
+      case FILTER.GOOD:
         list = list.filter(function(a) {
           return a.rating > 2;
         }).sort(function(a, b) {
@@ -155,7 +166,7 @@
         });
         break;
 
-      case 'reviews-bad':
+      case FILTER.BAD:
         list = list.filter(function(a) {
           return a.rating < 3;
         }).sort(function(a, b) {
@@ -163,7 +174,7 @@
         });
         break;
 
-      case 'reviews-popular':
+      case FILTER.POPULAR:
         list.sort(function(a, b) {
           return a.review_usefulness - b.review_usefulness;
         });
@@ -178,11 +189,11 @@
   };
 
   var countAll = function() {
-    addSupInFilters(getFiltredReviews('reviews-all').length, 'reviews-all');
-    addSupInFilters(getFiltredReviews('reviews-recent').length, 'reviews-recent');
-    addSupInFilters(getFiltredReviews('reviews-good').length, 'reviews-good');
-    addSupInFilters(getFiltredReviews('reviews-bad').length, 'reviews-bad');
-    addSupInFilters(getFiltredReviews('reviews-popular').length, 'reviews-popular');
+    addSupInFilters(getfilteredReviews('reviews-all').length, 'reviews-all');
+    addSupInFilters(getfilteredReviews('reviews-recent').length, 'reviews-recent');
+    addSupInFilters(getfilteredReviews('reviews-good').length, 'reviews-good');
+    addSupInFilters(getfilteredReviews('reviews-bad').length, 'reviews-bad');
+    addSupInFilters(getfilteredReviews('reviews-popular').length, 'reviews-popular');
   };
 
   var addSupInFilters = function(number, filterID) {
@@ -191,25 +202,29 @@
     reviewFilter.querySelector('[for=' + filterID + ']').appendChild(supTag);
   };
 
-
-  function isNextPageAvailable() {
-    var canShow = pageNumber < Math.ceil(filtredReviews.length / pageSize);
-    return canShow;
+  function checkMoreButton(number) {
+    if ((pageNumber + 1) < Math.ceil(number / pageSize)) {
+      reviewMoreButton.classList.remove('invisible');
+    } else {
+      reviewMoreButton.classList.add('invisible');
+    }
   }
 
-  /**
-   * подгрузка страниц по кнопке иф isNextPageAvailable, то
-   * добовляем по фильтру
-   * +1 страница
-   * не реплейс
-   * @return {boolean}
-   */
   reviewMoreButton.addEventListener('click', function() {
-    if (isNextPageAvailable()) {
-      renderReviews(filtredReviews, (++pageNumber), false);
-    }
+    renderReviews(filteredReviews, ++pageNumber, false);
   });
 
-  reviewFilter.classList.remove('invisible');
+  var emptyReview = function() {
+    var contentReview2 = reviewTemplate.content.querySelector('.empty-review');
 
+    var emptyCopyCat = contentReview2.cloneNode(true);
+    emptyCopyCat.querySelector('.empty-review__h2').textContent = 'соррян';
+    emptyCopyCat.querySelector('.empty-review__text').textContent = 'сегодня пустовато';
+    emptyCopyCat.querySelector('.empty-review__text').setAttribute('style', 'text-align: center;');
+
+    reviewList.appendChild(emptyCopyCat);
+
+  };
+
+  reviewFilter.classList.remove('invisible');
 })();
