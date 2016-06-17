@@ -124,13 +124,6 @@
       }
     });
 
-    for(var i = 0; i < filterElements.length; i++) {
-      filterElements[i].onclick = function(evt) {
-        if (evt.target.name === 'reviews') {
-          setActiveFilter(this.id);
-        }
-      };
-    }
   };
 
   var setActiveFilter = function(filterID) {
@@ -189,11 +182,11 @@
   };
 
   var countAll = function() {
-    addSupInFilters(getfilteredReviews('reviews-all').length, 'reviews-all');
-    addSupInFilters(getfilteredReviews('reviews-recent').length, 'reviews-recent');
-    addSupInFilters(getfilteredReviews('reviews-good').length, 'reviews-good');
-    addSupInFilters(getfilteredReviews('reviews-bad').length, 'reviews-bad');
-    addSupInFilters(getfilteredReviews('reviews-popular').length, 'reviews-popular');
+    addSupInFilters(getfilteredReviews(FILTER.ALL).length, FILTER.ALL);
+    addSupInFilters(getfilteredReviews(FILTER.RECENT).length, FILTER.RECENT);
+    addSupInFilters(getfilteredReviews(FILTER.GOOD).length, FILTER.GOOD);
+    addSupInFilters(getfilteredReviews(FILTER.BAD).length, FILTER.BAD);
+    addSupInFilters(getfilteredReviews(FILTER.POPULAR).length, FILTER.POPULAR);
   };
 
   var addSupInFilters = function(number, filterID) {
