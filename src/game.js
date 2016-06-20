@@ -782,18 +782,20 @@
   /**
   */
   var headerClouds = document.querySelector('.header-clouds');
-  var isWeSeeClouds = true;
-  var lastCall = Date.now();
+  var seeClouds = true;
+
+  var trottleDelay = 100;
 
   function initScroll() {
     window.addEventListener('scroll', function() {
-      trottle(checkVisbility, 100);
+      trottle(checkVisbility(), trottleDelay);
       moveClouds();
     });
   }
 
   function moveClouds() {
-    if (isWeSeeClouds) {
+    if (seeClouds) {
+      console.log('seeClouds');
       var num = window.pageYOffset;
       headerClouds.style.top = num / 4 + 0 + 'px';
       headerClouds.style.backgroundPosition = num / 3 + 0 + 'px';
@@ -801,20 +803,28 @@
   }
 
   var checkVisbility = function() {
+    console.log('checkVisbility');
     if (window.pageYOffset < 300) {
-      isWeSeeClouds = true;
+      seeClouds = true;
       game.setGameStatus(Game.Verdict.CONTINUE);
     } else {
-      isWeSeeClouds = false;
+      console.log('pause');
+      seeClouds = false;
       game.setGameStatus(Game.Verdict.PAUSE);
     }
   };
 
   var trottle = function(funct, time) {
-    if (Date.now() - lastCall >= time) {
-      funct();
-    }
-    lastCall = Date.now();
+    var lastCall = Date.now();
+
+    var createFunct = function() {
+      if (Date.now() - lastCall >= time) {
+        funct();
+      }
+      lastCall = Date.now();
+    };
+    console.log('return');
+    return createFunct();
   };
 
   initScroll();
