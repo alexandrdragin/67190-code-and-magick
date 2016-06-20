@@ -8,7 +8,7 @@
   var pageSize = 3;
   var pageNumber = 0;
 
-  var FILTER = {
+  var Filter = {
     'ALL': 'reviews-all',
     'RECENT': 'reviews-recent',
     'GOOD': 'reviews-good',
@@ -111,7 +111,7 @@
   getAllRewiews(function(loadedRewiews) {
     reviews = loadedRewiews;
     startFilters();
-    setActiveFilter(FILTER.ALL);
+    setActiveFilter(Filter.ALL);
 
     countAll();
   });
@@ -124,13 +124,6 @@
       }
     });
 
-    for(var i = 0; i < filterElements.length; i++) {
-      filterElements[i].onclick = function(evt) {
-        if (evt.target.name === 'reviews') {
-          setActiveFilter(this.id);
-        }
-      };
-    }
   };
 
   var setActiveFilter = function(filterID) {
@@ -145,9 +138,9 @@
     var list = reviews.slice(0);
 
     switch (filterID) {
-      case FILTER.ALL:
+      case Filter.ALL:
         break;
-      case FILTER.RECENT:
+      case Filter.RECENT:
         var dateFour = new Date();
         dateFour.setDate(dateFour.getDate() - 4);
 
@@ -158,7 +151,7 @@
         });
         break;
 
-      case FILTER.GOOD:
+      case Filter.GOOD:
         list = list.filter(function(a) {
           return a.rating > 2;
         }).sort(function(a, b) {
@@ -166,7 +159,7 @@
         });
         break;
 
-      case FILTER.BAD:
+      case Filter.BAD:
         list = list.filter(function(a) {
           return a.rating < 3;
         }).sort(function(a, b) {
@@ -174,7 +167,7 @@
         });
         break;
 
-      case FILTER.POPULAR:
+      case Filter.POPULAR:
         list.sort(function(a, b) {
           return a.review_usefulness - b.review_usefulness;
         });
@@ -189,11 +182,11 @@
   };
 
   var countAll = function() {
-    addSupInFilters(getfilteredReviews('reviews-all').length, 'reviews-all');
-    addSupInFilters(getfilteredReviews('reviews-recent').length, 'reviews-recent');
-    addSupInFilters(getfilteredReviews('reviews-good').length, 'reviews-good');
-    addSupInFilters(getfilteredReviews('reviews-bad').length, 'reviews-bad');
-    addSupInFilters(getfilteredReviews('reviews-popular').length, 'reviews-popular');
+    addSupInFilters(getfilteredReviews(Filter.ALL).length, Filter.ALL);
+    addSupInFilters(getfilteredReviews(Filter.RECENT).length, Filter.RECENT);
+    addSupInFilters(getfilteredReviews(Filter.GOOD).length, Filter.GOOD);
+    addSupInFilters(getfilteredReviews(Filter.BAD).length, Filter.BAD);
+    addSupInFilters(getfilteredReviews(Filter.POPULAR).length, Filter.POPULAR);
   };
 
   var addSupInFilters = function(number, filterID) {
