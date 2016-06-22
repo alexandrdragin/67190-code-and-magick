@@ -1,8 +1,8 @@
 'use strict';
 
-var cookies = require('browser-cookies');
 
-(function() {
+define(function() {
+//var cookies = require('browser-cookies');
 
   var formContainer = document.querySelector('.overlay-container');
   var formOpenButton = document.querySelector('.reviews-controls-new');
@@ -120,4 +120,4 @@ var cookies = require('browser-cookies');
 
   checkValues();
 
-})();
+});
