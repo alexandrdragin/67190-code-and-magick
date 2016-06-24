@@ -1,6 +1,6 @@
 'use strict';
 
-(function() {
+define(function() {
   /**
    * @const
    * @type {number}
@@ -778,4 +778,6 @@
   var game = new Game(document.querySelector('.demo'));
   game.initializeLevelAndStart();
   game.setGameStatus(window.Game.Verdict.INTRO);
+
+  return Game;
 })();
