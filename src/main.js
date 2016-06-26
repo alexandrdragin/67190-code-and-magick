@@ -1,9 +1,9 @@
 'use strict';
 
 require([
-  './load',
+  './render',
   './gallery',
-  './game',
+  './scroll',
   './form'], function() {
 
 });

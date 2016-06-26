@@ -47,7 +47,4 @@ define(['./game'], function(Game) {
   };
 
   initScroll();
-
-  return Game;
-
 });
