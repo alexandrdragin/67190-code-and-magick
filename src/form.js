@@ -2,11 +2,7 @@
 
 var cookies = require('browser-cookies');
 
-<<<<<<< HEAD
-define(['browser-cookies'], function(cookies) {
-=======
 (function() {
->>>>>>> parent of a1491f5... start spliting with AMD
 
   var formContainer = document.querySelector('.overlay-container');
   var formOpenButton = document.querySelector('.reviews-controls-new');
