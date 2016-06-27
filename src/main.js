@@ -4,6 +4,6 @@ require([
   './load',
   './gallery',
   './game',
-  './form'], function() {
+  './form'], function(date, Gallery) {
 
 });
