@@ -1,9 +1,5 @@
 'use strict';
 
-require([
-  './load',
-  './gallery',
-  './game',
-  './form'], function(date, Gallery) {
-
-});
+require('./game');
+require('./form');
+require('./reviews');
