@@ -779,6 +779,7 @@
   game.initializeLevelAndStart();
   game.setGameStatus(window.Game.Verdict.INTRO);
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 <<<<<<< HEAD
   return Game;
@@ -834,6 +835,8 @@
   initScroll();
 
 >>>>>>> parent of a1491f5... start spliting with AMD
+=======
+>>>>>>> parent of dd2667c... help request
 =======
 >>>>>>> parent of dd2667c... help request
 })();
