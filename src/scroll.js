@@ -1,6 +1,6 @@
 'use strict';
 
-define(['./game'], function(Game) {
+define(['.game'], function(Game) {
 
   var headerClouds = document.querySelector('.header-clouds');
   var seeClouds = true;
@@ -27,10 +27,10 @@ define(['./game'], function(Game) {
     console.log('checkVisbility');
     if (window.pageYOffset < 300) {
       seeClouds = true;
-      Game.setGameStatus(Game.Verdict.CONTINUE);
+      game.setGameStatus(Game.Verdict.CONTINUE);
     } else {
       seeClouds = false;
-      Game.setGameStatus(Game.Verdict.PAUSE);
+      game.setGameStatus(Game.Verdict.PAUSE);
     }
   };
 
@@ -47,7 +47,5 @@ define(['./game'], function(Game) {
   };
 
   initScroll();
-
-  return Game;
 
 });
