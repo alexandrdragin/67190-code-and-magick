@@ -3,3 +3,4 @@
 require('./game');
 require('./form');
 require('./reviews');
+require('./scroll');
