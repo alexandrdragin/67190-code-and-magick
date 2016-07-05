@@ -16,7 +16,6 @@ function initScroll() {
 
 function moveClouds() {
   if (seeClouds) {
-    console.log('seeClouds');
     var num = window.pageYOffset;
     headerClouds.style.top = num / 4 + 0 + 'px';
     headerClouds.style.backgroundPosition = num / 3 + 0 + 'px';
