@@ -1,17 +1,18 @@
 'use strict';
 
+var get = require('./gallery-get');
+
 var Key = {
   'ESC': 27,
   'LEFT': 37,
   'RIGHT': 39
 };
 
-var get = require('./gallery-get');
 
 var galleryContainer = document.querySelector('.photogallery');
 var photos = galleryContainer.querySelectorAll('.photogallery-image img');
 //блок оверлея
-var overlayGallery = galleryContainer.querySelector('.overlay-gallery');
+var overlayGallery = document.querySelector('.overlay-gallery');
 
 // блок с номером фото
 var previewContainer = overlayGallery.querySelector('.overlay-gallery-preview');
@@ -24,18 +25,17 @@ var currentPhoto = 0;
 
 var galleryPics = get(photos);
 
-  // привязывалка
-
 /**
    * Показывает фотогалерею, убирая у контейнера класс invisible. Затем добавляет
    * обработчики событий и показывает текущую фотографию.
    */
 var showGallery = function(img) {
+  console.log("showGallery");
   overlayGallery.classList.remove('invisible');
-  closeButtton.addEventListener('click', onCloseClick());
-  leftButton.addEventListener('click', onLeftButtonClick());
-  rightButton.addEventListener('click', onRightButtonClick());
-  document.body.addEventListener('keydown', onKeyDown());
+  closeButtton.addEventListener('click', onCloseClick);
+  leftButton.addEventListener('click', onLeftButtonClick);
+  rightButton.addEventListener('click', onRightButtonClick);
+  document.body.addEventListener('keydown', onKeyDown);
 
   showPhoto(img);
 
@@ -48,9 +48,9 @@ var showGallery = function(img) {
 var hideGallery = function() {
   overlayGallery.classList.add('invisible');
 
-  closeButtton.removeEventListener('click', onCloseClick());
-  leftButton.removeEventListener('click', onLeftButtonClick());
-  this._rightButton.removeEventListener('click', onRightButtonClick());
+  closeButtton.removeEventListener('click', onCloseClick);
+  leftButton.removeEventListener('click', onLeftButtonClick);
+  this._rightButton.removeEventListener('click', onRightButtonClick);
   document.body.removeEventListener('keydown', onKeyDown());
 
   currentPhoto = 0;
@@ -60,12 +60,15 @@ galleryContainer.addEventListener('click', function(evt) {
   evt.preventDefault();
 
   if (evt.target.src) {
+    debugger;
 
     for (var i = 0; i < galleryPics.length; i++) {
-      if (galleryPics[i] === evt.target.src) {
-        showGallery(i);
+      if (previewContainer[i] === evt.target.src) {
+        console.log(galleryPics.length);
+
         break;
       }
+      showGallery(evt.target.src);
     }
 
     // Отслеживание события клика и запуск функции управления галереей
@@ -82,24 +85,12 @@ galleryContainer.addEventListener('click', function(evt) {
 
 
 var showPhoto = function(img) {
-  overlayGallery.classList.remove('invisible');
-  var index = this._photos.indexOf(img.getAttribute('src'));
-  if (index !== -1) {
-    this._currentPhoto = index;
-  }
+  console.log("showPhoto");
 
-  showCurrentPhoto();
+
 };
 
 
-var showCurrentPhoto = function() {
-  this._pictureElement.innerHTML = '';
-
-  var imageElement;
-
-  previewContainer.appendChild(imageElement.el);
-
-};
 
 /**
  * Обработчик события клика по крестику закрытия. Вызывает метод hide.
