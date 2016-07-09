@@ -1,6 +1,7 @@
 'use strict';
 
 var get = require('./gallery-get');
+var showPhoto = require('./gallery-show');
 
 var Key = {
   'ESC': 27,
@@ -11,34 +12,51 @@ var Key = {
 
 var galleryContainer = document.querySelector('.photogallery');
 var photos = galleryContainer.querySelectorAll('.photogallery-image img');
-//блок оверлея
+
 var overlayGallery = document.querySelector('.overlay-gallery');
 
-// блок с номером фото
-var previewContainer = overlayGallery.querySelector('.overlay-gallery-preview');
-// кнопки
+
+
 var closeButtton = overlayGallery.querySelector('.overlay-gallery-close');
 var leftButton = overlayGallery.querySelector('.overlay-gallery-control-left');
 var rightButton = overlayGallery.querySelector('.overlay-gallery-control-right');
 
+var galleryPics = get(photos);
+
+overlayGallery.querySelector('.preview-number-total').textContent = galleryPics.length;
+var currentNumber = overlayGallery.querySelector('.preview-number-current');
+
 var currentPhoto = 0;
 
-var galleryPics = get(photos);
+
+galleryContainer.addEventListener('click', function(evt) {
+  evt.preventDefault();
+
+  if (evt.target.src) {
+    for (var i = 0; i < galleryPics.length; i++) {
+      if (galleryPics[i] === evt.target.src) {
+        currentNumber.textContent = i + 1;
+        currentPhoto = i;
+
+        showGallery(i);
+      }
+    }
+  }
+});
 
 /**
    * Показывает фотогалерею, убирая у контейнера класс invisible. Затем добавляет
    * обработчики событий и показывает текущую фотографию.
    */
-var showGallery = function(img) {
-  console.log("showGallery");
+var showGallery = function(imgNumbr) {
   overlayGallery.classList.remove('invisible');
+
   closeButtton.addEventListener('click', onCloseClick);
   leftButton.addEventListener('click', onLeftButtonClick);
   rightButton.addEventListener('click', onRightButtonClick);
-  document.body.addEventListener('keydown', onKeyDown);
+  document.addEventListener('keydown', onKeyDown);
 
-  showPhoto(img);
-
+  showPhoto(galleryPics[imgNumbr]);
 };
 
 /**
@@ -50,47 +68,11 @@ var hideGallery = function() {
 
   closeButtton.removeEventListener('click', onCloseClick);
   leftButton.removeEventListener('click', onLeftButtonClick);
-  this._rightButton.removeEventListener('click', onRightButtonClick);
-  document.body.removeEventListener('keydown', onKeyDown());
+  rightButton.removeEventListener('click', onRightButtonClick);
+  document.removeEventListener('keydown', onKeyDown);
 
   currentPhoto = 0;
 };
-
-galleryContainer.addEventListener('click', function(evt) {
-  evt.preventDefault();
-
-  if (evt.target.src) {
-    debugger;
-
-    for (var i = 0; i < galleryPics.length; i++) {
-      if (previewContainer[i] === evt.target.src) {
-        console.log(galleryPics.length);
-
-        break;
-      }
-      showGallery(evt.target.src);
-    }
-
-    // Отслеживание события клика и запуск функции управления галереей
-    overlayGallery.addEventListener('click', onCloseClick);
-
-    window.addEventListener('keydown', onKeyDown);
-  }
-});
-
-/**этератор массива на обьекте (коллекции) с контекстом(1 аргумент) через функцию из протопипа
- * Записывает список фотографий.
- * @param {Array.<string>} photos
- */
-
-
-var showPhoto = function(img) {
-  console.log("showPhoto");
-
-
-};
-
-
 
 /**
  * Обработчик события клика по крестику закрытия. Вызывает метод hide.
@@ -109,7 +91,9 @@ var onCloseClick = function(evt) {
  */
 var onLeftButtonClick = function(evt) {
   evt.preventDefault();
-  setCurrentPhoto(currentPhoto - 1);
+  if(currentPhoto > 0) {
+    setCurrentPhoto(-1);
+  }
 };
 
 /**
@@ -119,7 +103,9 @@ var onLeftButtonClick = function(evt) {
  */
 var onRightButtonClick = function(evt) {
   evt.preventDefault();
-  setCurrentPhoto(currentPhoto + 1);
+  if(currentPhoto < galleryPics.length - 1) {
+    setCurrentPhoto(1);
+  }
 };
 
 /**
@@ -129,17 +115,24 @@ var onRightButtonClick = function(evt) {
  * @private
  */
 var onKeyDown = function(evt) {
+  evt.preventDefault();
+
   switch (evt.keyCode) {
+
     case Key.ESC:
       hideGallery();
       break;
 
     case Key.LEFT:
-      setCurrentPhoto(currentPhoto - 1);
+      if(currentPhoto > 0) {
+        setCurrentPhoto(-1);
+      }
       break;
 
     case Key.RIGHT:
-      setCurrentPhoto(currentPhoto + 1);
+      if(currentPhoto < galleryPics.length - 1) {
+        setCurrentPhoto(1);
+      }
       break;
   }
 };
@@ -148,19 +141,8 @@ var onKeyDown = function(evt) {
    * прокрутка по кругу
    * @param {number} index
    */
-var setCurrentPhoto = function(index) {
-  if (index < 0) {
-    index = 5;
-  }
-
-  if (index > 5) {
-    index = 0;
-  }
-
-  if (currentPhoto === index) {
-    return;
-  }
-
-  currentPhoto = index;
-  showCurrentPhoto();
+var setCurrentPhoto = function(i) {
+  currentPhoto = currentPhoto + i;
+  showPhoto(galleryPics[currentPhoto]);
+  currentNumber.textContent = currentPhoto + 1;
 };
