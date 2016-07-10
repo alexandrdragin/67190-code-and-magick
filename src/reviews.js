@@ -32,11 +32,11 @@ var renderReviews = function(reviewsToGo, page, replace) {
   if (replace) {
     reviewList.innerHTML = '';
 
-    //renderedReviews.forEach(function(review) {
-    Review.remove();
-    //});
+    reviews.forEach(function() {
+      Review.remove();
+    });
 
-    //renderedReviews = [];
+    reviews = [];
 
   }
 
@@ -49,12 +49,7 @@ var renderReviews = function(reviewsToGo, page, replace) {
   var to = from + pageSize;
 
   reviewsToGo.slice(from, to).forEach(function(data) {
-
-    var view = new Review(data, reviewList);
-    view.render();
-
-  //  reviewsFragment.appendChild(view.el);
-  //  renderedReviews.push(view);
+    reviews.push(new Review(data, reviewList));
   });
 
 
@@ -76,7 +71,6 @@ var startFilters = function() {
       setActiveFilter(evt.target.id);
     }
   });
-
 };
 
 var setActiveFilter = function(filterID) {
