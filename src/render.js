@@ -2,33 +2,6 @@
 
 (function() {
 
-  var Review = function(data, container) {
-    this.data = data;
-    this.element = createReviewElement(this.data, container);
-
-    this.bindEvents();
-
-    container.appendChild(this.element);
-  };
-
-  Review.prototype = {
-    bindEvents: function() {
-      this.element.addEventListener('click', this.onQuizClick);
-    },
-    unbindEvents: function() {
-      this.element.removeEventListener('click', this.onQuizClick);
-    },
-
-    remove: function() {
-      this.unbindEvents();
-      this.element.parentNode.removeChild(this.element);
-    }
-  };
-
-  module.exports = Review;
-
-
-
   var ratingClass = {
     '1': 'review-rating-one',
     '2': 'review-rating-two',
@@ -47,31 +20,54 @@
     contentReview = reviewTemplate.querySelector('.review');
   }
 
-  var createReviewElement = function(data, container) {
-    var copyCat = contentReview.cloneNode(true);
-    copyCat.querySelector('.review-author').title = data.author['name'];
-    copyCat.querySelector('.review-author').alt = data.author['name'];
-    copyCat.querySelector('.review-rating').classList.add(ratingClass[data.rating]);
-    copyCat.querySelector('.review-text').textContent = data.description;
+  var Review = function(data, container) {
+    this.data = data;
+    this.element = Review.render(this.data, container);
 
-    container.appendChild(copyCat);
+    this.bindEvents();
 
-    var imgAuthor = new Image(124, 124);
-
-    imgAuthor.onload = function() {
-      copyCat.querySelector('.review-author').src = data.author['picture'];
-      copyCat.querySelector('.review-author').width = 124;
-      copyCat.querySelector('.review-author').height = 124;
-    };
-
-    imgAuthor.onerror = function() {
-      copyCat.classList.add('review-load-failure');
-    };
-
-    imgAuthor.src = data.author['picture'];
-
-    return copyCat;
+    container.appendChild(this.element);
   };
 
-  module.exports = createReviewElement;
+  Review.prototype = {
+    bindEvents: function() {
+      this.element.addEventListener('click', this.onClick);
+    },
+    unbindEvents: function() {
+      this.element.removeEventListener('click', this.onClick);
+    },
+
+    render: function(data, container) {
+      var copyCat = contentReview.cloneNode(true);
+      copyCat.querySelector('.review-author').title = data.author['name'];
+      copyCat.querySelector('.review-author').alt = data.author['name'];
+      copyCat.querySelector('.review-rating').classList.add(ratingClass[data.rating]);
+      copyCat.querySelector('.review-text').textContent = data.description;
+
+      container.appendChild(copyCat);
+
+      var imgAuthor = new Image(124, 124);
+
+      imgAuthor.onload = function() {
+        copyCat.querySelector('.review-author').src = data.author['picture'];
+        copyCat.querySelector('.review-author').width = 124;
+        copyCat.querySelector('.review-author').height = 124;
+      };
+
+      imgAuthor.onerror = function() {
+        copyCat.classList.add('review-load-failure');
+      };
+
+      imgAuthor.src = data.author['picture'];
+
+      return copyCat;
+    },
+
+    remove: function() {
+      this.unbindEvents();
+      this.element.parentNode.removeChild(this.element);
+    }
+  };
+
+  module.exports = Review;
 })();

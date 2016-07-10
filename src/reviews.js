@@ -1,7 +1,6 @@
 'use strict';
 
 var getAllRewiews = require('./load');
-var createReviewElement = require('./render');
 var Review = require('./render');
 
 var reviews = [];
@@ -50,8 +49,14 @@ var renderReviews = function(reviewsToGo, page, replace) {
   var to = from + pageSize;
 
   reviewsToGo.slice(from, to).forEach(function(data) {
-    createReviewElement(data, reviewList);
+
+    var view = new Review(data, reviewList);
+    view.render();
+
+  //  reviewsFragment.appendChild(view.el);
+  //  renderedReviews.push(view);
   });
+
 
   checkMoreButton(reviewsToGo.length);
 };
