@@ -1,32 +1,29 @@
 'use strict';
 
-(function() {
+var renderGet = require('./render-get');
 
-  var renderGet = require('./render-get');
+var Review = function(data, container) {
+  this.data = data;
+  this.element = renderGet(this.data, container);
 
-  var Review = function(data, container) {
-    this.data = data;
-    this.element = renderGet(this.data, container);
+  this.bindEvents();
 
-    this.bindEvents();
+  this.element.parentNode.appendChild(this.element);
+};
 
-    this.element.parentNode.appendChild(this.element);
-  };
+Review.prototype = {
 
-  Review.prototype = {
+  remove: function() {
+    this.unbindEvents();
+    this.element.parentNode.removeChild(this.element);
+  },
 
-    remove: function() {
-      this.unbindEvents();
-      this.element.parentNode.removeChild(this.element);
-    },
+  bindEvents: function() {
+    this.element.addEventListener('click', this.onClick);
+  },
+  unbindEvents: function() {
+    this.element.removeEventListener('click', this.onClick);
+  }
+};
 
-    bindEvents: function() {
-      this.element.addEventListener('click', this.onClick);
-    },
-    unbindEvents: function() {
-      this.element.removeEventListener('click', this.onClick);
-    }
-  };
-
-  module.exports = Review;
-})();
+module.exports = Review;

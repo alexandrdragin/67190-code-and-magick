@@ -37,7 +37,6 @@ var renderReviews = function(reviewsToGo, page, replace) {
     });
 
     reviews = [];
-
   }
 
   if (reviewsToGo.length === 0) {
@@ -51,7 +50,6 @@ var renderReviews = function(reviewsToGo, page, replace) {
   reviewsToGo.slice(from, to).forEach(function(data) {
     reviews.push(new Review(data, reviewList));
   });
-
 
   checkMoreButton(reviewsToGo.length);
 };
@@ -163,7 +161,6 @@ var emptyReview = function() {
   emptyCopyCat.querySelector('.empty-review__text').setAttribute('style', 'text-align: center;');
 
   reviewList.appendChild(emptyCopyCat);
-
 };
 
 reviewFilter.classList.remove('invisible');
