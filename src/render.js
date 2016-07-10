@@ -2,6 +2,33 @@
 
 (function() {
 
+  var Review = function(data, container) {
+    this.data = data;
+    this.element = createReviewElement(this.data, container);
+
+    this.bindEvents();
+
+    container.appendChild(this.element);
+  };
+
+  Review.prototype = {
+    bindEvents: function() {
+      this.element.addEventListener('click', this.onQuizClick);
+    },
+    unbindEvents: function() {
+      this.element.removeEventListener('click', this.onQuizClick);
+    },
+
+    remove: function() {
+      this.unbindEvents();
+      this.element.parentNode.removeChild(this.element);
+    }
+  };
+
+  module.exports = Review;
+
+
+
   var ratingClass = {
     '1': 'review-rating-one',
     '2': 'review-rating-two',

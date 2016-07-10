@@ -2,6 +2,7 @@
 
 var getAllRewiews = require('./load');
 var createReviewElement = require('./render');
+var Review = require('./render');
 
 var reviews = [];
 var filteredReviews = null;
@@ -31,6 +32,13 @@ var renderReviews = function(reviewsToGo, page, replace) {
 
   if (replace) {
     reviewList.innerHTML = '';
+
+    //renderedReviews.forEach(function(review) {
+    Review.remove();
+    //});
+
+    //renderedReviews = [];
+
   }
 
   if (reviewsToGo.length === 0) {
