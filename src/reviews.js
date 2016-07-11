@@ -1,7 +1,7 @@
 'use strict';
 
 var getAllRewiews = require('./load');
-var createReviewElement = require('./render');
+var Review = require('./render');
 
 var reviews = [];
 var filteredReviews = null;
@@ -31,6 +31,12 @@ var renderReviews = function(reviewsToGo, page, replace) {
 
   if (replace) {
     reviewList.innerHTML = '';
+
+    reviews.forEach(function() {
+      Review.remove();
+    });
+
+    reviews = [];
   }
 
   if (reviewsToGo.length === 0) {
@@ -42,7 +48,7 @@ var renderReviews = function(reviewsToGo, page, replace) {
   var to = from + pageSize;
 
   reviewsToGo.slice(from, to).forEach(function(data) {
-    createReviewElement(data, reviewList);
+    reviews.push(new Review(data, reviewList));
   });
 
   checkMoreButton(reviewsToGo.length);
@@ -63,7 +69,6 @@ var startFilters = function() {
       setActiveFilter(evt.target.id);
     }
   });
-
 };
 
 var setActiveFilter = function(filterID) {
@@ -156,7 +161,6 @@ var emptyReview = function() {
   emptyCopyCat.querySelector('.empty-review__text').setAttribute('style', 'text-align: center;');
 
   reviewList.appendChild(emptyCopyCat);
-
 };
 
 reviewFilter.classList.remove('invisible');
