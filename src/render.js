@@ -13,17 +13,17 @@ var Review = function(data, container) {
 
 Review.prototype = {
 
-  remove: function() {
-    this.unbindEvents();
-    this.element.parentNode.removeChild(this.element);
-  },
-
   bindEvents: function() {
     this.element.addEventListener('click', this.onClick);
   },
   unbindEvents: function() {
     this.element.removeEventListener('click', this.onClick);
   }
+};
+
+Review.prototype.remove = function() {
+  this.removeEvents();
+  this.element.parentNode.removeChild(this.element);
 };
 
 module.exports = Review;
