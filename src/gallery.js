@@ -17,7 +17,17 @@ galleryContainer.addEventListener('click', function(evt) {
 
   if (evt.target.src) {
 
-    var galleryPics = Gallery.getPhotos(photos);
+    var galleryPics = getPhotos(photos);
+
+    var getPhotos = function(data) {
+      var loadedPhotos = data;
+      for (var i = 0; i < loadedPhotos.length; i++) {
+        galleryPics.push(loadedPhotos[i].src);
+      }
+
+      overlayGallery.querySelector('.preview-number-total').textContent = this.photos.length;
+      return galleryPics;
+    };
 
     for (var i = 0; i < galleryPics.length; i++) {
       if (galleryPics[i] === evt.target.src) {
@@ -27,6 +37,9 @@ galleryContainer.addEventListener('click', function(evt) {
       }
     }
   }
+
+  galleryPics();
+
 });
 
 module.exports = new Gallery(galleryContainer, photos, overlayGallery);

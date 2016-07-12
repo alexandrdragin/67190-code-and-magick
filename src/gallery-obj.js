@@ -39,16 +39,6 @@
       this.currentNumber = overlayGallery.querySelector('.preview-number-current');
     },
 
-    getPhotos: function(data) {
-      var loadedPhotos = data;
-      for (var i = 0; i < loadedPhotos.length; i++) {
-        this.photos.push(loadedPhotos[i].src);
-      }
-
-      overlayGallery.querySelector('.preview-number-total').textContent = this.photos.length;
-      return this.photos;
-    },
-
     showGallery: function(imgNumbr) {
       overlayGallery.classList.remove('invisible');
 
